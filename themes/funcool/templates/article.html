@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block extra_headers %}
+  <meta name="desciption" content="{{ article.content|striptags|escape|truncate(500) }}" />
+  {% if article.authors %}
+    <meta name="author" content="{{ article.authors[0] }}" />
+  {% endif %}
+{% endblock %}
+
+
+{% block title %}{{ super() }} : {{ article.title }}{% endblock %}
+{% block content %}
+  <header>
+    <a href="{{ SITEURL }}"><small>(return to home)</small></a>
+    <h1>
+      <a href="{{ SITEURL }}/{{ article.url }}" id="page-title">{{ article.title }}</a>
+    </h1>
+    <div class="article-meta">
+      {% if not HIDE_DATE %}
+        <small class="time">
+          Date:
+          <time datetime="{{ article.date.isoformat() }}">
+            {{ article.locale_date }}
+          </time>
+        </small>
+      {% endif %}
+      <br />
+      <small class="tags">
+        Tags:
+        {% for tag in article.tags %}
+          <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}{% if not loop.last %}, {% endif %}
+          </a>
+        {% endfor %}
+      </small>
+    </div>
+  </header>
+  <article>
+    <div id="article-content">
+      {{ article.content }}
+    </div>
+    {% if DISQUS_SITENAME and SITEURL and article.status != "draft" %}
+      <h2>Comments</h2>
+
+      <div id="disqus_thread"></div>
+
+      <script>
+       // https://disqus.com/admin/universalcode/#configuration-variables
+       var disqus_config = function () {
+           this.page.url = '{{ SITEURL }}/{{ article.url }}';
+           this.page.identifier = '{{ article.url }}';
+       };
+       (function() {
+           var d = document, s = d.createElement('script');
+           s.src = '//niwibe.disqus.com/embed.js';
+           s.setAttribute('data-timestamp', +new Date());
+           (d.head || d.body).appendChild(s);
+       })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    {% endif %}
+  </article>
+{% endblock %}

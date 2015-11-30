@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content_title %}{% endblock %}
+{% block content %}
+  <section id="intro">
+    <a href="{{ SITEURL }}/">
+      <h1>{{ SITENAME }}</h1>
+    </a>
+  </section>
+
+  <section id="article-list">
+    {% if articles %}
+      <h2>Articles</h2>
+      <ol>
+        {% for article in articles %}
+          <li class="truncate">
+            <span class="article-date">{{ article.date|strftime('%d %b %Y') }}</span>
+            <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a>
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      No posts found.
+    {% endif %}
+  </section>
+{% endblock content %}
